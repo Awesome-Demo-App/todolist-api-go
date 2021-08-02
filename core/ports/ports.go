@@ -1,11 +1,13 @@
 package ports
 
 import (
+	"context"
+
 	domain "github.com/awesome-demo-app/todolist-api/core/domain"
 )
 
 type ToDoRepository interface {
-	GetAll() ([]domain.ToDo, error)
+	GetAll(context.Context) ([]domain.ToDo, error)
 	Create(domain.ToDo) domain.ToDo
 	Delete(uint)
 }

@@ -1,7 +1,12 @@
 package repositories
 
 import (
+	"context"
+	"fmt"
+
 	domain "github.com/awesome-demo-app/todolist-api/core/domain"
+	"go.opentelemetry.io/otel"
+	"go.opentelemetry.io/otel/trace"
 	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
 )
@@ -28,9 +33,16 @@ func NewSQLiteDB(dbPath string) *todoDB {
 	return &todoDB{db: db}
 }
 
-func (repo *todoDB) GetAll() ([]domain.ToDo, error) {
+func (repo *todoDB) GetAll(ctx context.Context) ([]domain.ToDo, error) {
+	tracer := otel.Tracer("github.com/awesome-demo-app/todolist-api-go")
 	var todos []domain.ToDo
-	repo.db.Find(&todos)
+	fmt.Println("Repositories → Fetching all ToDo from DB")
+	func(ctx context.Context) {
+		var span trace.Span
+		_, span = tracer.Start(ctx, "Querying DB...")
+		defer span.End()
+		repo.db.Find(&todos)
+	}(ctx)
 
 	return todos, nil
 }
