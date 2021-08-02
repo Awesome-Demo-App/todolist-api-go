@@ -28,6 +28,7 @@ func (service *todoService) GetAll() ([]domain.ToDo, error) {
 }
 
 func (service *todoService) Create(summary string) domain.ToDo {
+	fmt.Printf("Domain → Creating a new ToDo with summary: %s\n", summary)
 	return service.todoRepository.Create(domain.ToDo{
 		Summary:   summary,
 		Completed: false,
@@ -35,5 +36,6 @@ func (service *todoService) Create(summary string) domain.ToDo {
 }
 
 func (service *todoService) Delete(id uint) {
+	fmt.Printf("Domain → Deleting ToDo %d\n", id)
 	service.todoRepository.Delete(id)
 }

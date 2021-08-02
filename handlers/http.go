@@ -28,49 +28,52 @@ func (handler *HTTPHandler) HandleRequests() {
 
 // Dispatch depending on method
 func (handler *HTTPHandler) ToDoDispatchHandler(w http.ResponseWriter, r *http.Request) {
-	fmt.Println("Dispatching ToDo endpoint based on HTTP verb")
+	fmt.Println("Handler → Dispatching ToDo endpoint based on HTTP verb")
 	switch r.Method {
 	case "GET":
-		fmt.Println("GET")
+		fmt.Println("Handlers → Got a GET request")
 		handler.GetAllToDos(w, r)
 	case "POST":
-		fmt.Println("POST")
+		fmt.Println("Handlers → Got a POST request")
 		handler.CreateNewToDo(w, r)
 	case "DELETE":
-		fmt.Println("DELETE")
+		fmt.Println("Handlers → Got a DELETE request")
 		handler.DeleteToDoByID(w, r)
 	}
 }
 
 func (handler *HTTPHandler) GetAllToDos(w http.ResponseWriter, r *http.Request) {
-	fmt.Println("Endpoint Hit: GetAllToDos")
+	fmt.Println("Handlers → Endpoint Hit: GetAllToDos")
 
 	todos, err := handler.todoService.GetAll()
 	if err != nil {
 		fmt.Fprintf(w, "Failed lol")
 	}
 
+	fmt.Println("Handlers → Rendering ToDos")
 	for _, todo := range todos {
 		fmt.Fprintf(w, "- %+v\n", todo.Summary)
 	}
 }
 
 func (handler *HTTPHandler) CreateNewToDo(w http.ResponseWriter, r *http.Request) {
-	fmt.Println("Endpoint Hit: CreateNewToDo")
+	fmt.Println("Handlers → Endpoint Hit: CreateNewToDo")
 
 	queryParameters := r.URL.Query()
-	log.Printf("%v\n", queryParameters)
+	fmt.Printf("Handlers → Got the following query parameters: %v\n", queryParameters)
 
 	summaryRawData, ok := queryParameters["summary"]
-	log.Printf("%v\n", summaryRawData)
+	fmt.Printf("Handlers → Got the following summary data: %v\n", summaryRawData)
 
 	if !ok || len(summaryRawData) != 1 {
-		log.Println("Could not find 'summary' parameter in POST data")
+		fmt.Println("Could not find 'summary' parameter in POST data")
 		return
 	}
 
 	summary := summaryRawData[0]
+	fmt.Printf("Handlers → Creating new ToDo from summary by calling Service")
 	todo := handler.todoService.Create(summary)
+	fmt.Printf("Handlers → Serializing newly created ToDo in JSON before returning")
 	serializedToDo, err := json.Marshal(&todo)
 	if err != nil {
 		fmt.Println(err)
@@ -80,16 +83,16 @@ func (handler *HTTPHandler) CreateNewToDo(w http.ResponseWriter, r *http.Request
 }
 
 func (handler *HTTPHandler) DeleteToDoByID(w http.ResponseWriter, r *http.Request) {
-	fmt.Println("Endpoint Hit: DeleteToDoByID")
+	fmt.Println("Handlers → Endpoint Hit: DeleteToDoByID")
 
 	queryParameters := r.URL.Query()
-	log.Printf("%v\n", queryParameters)
+	fmt.Printf("Handlers → Got the following query parameters: %v\n", queryParameters)
 
 	idRawData, ok := queryParameters["id"]
-	log.Printf("%v\n", idRawData)
+	fmt.Printf("Handlers → Got the following id data: %v\n", idRawData)
 
 	if !ok || len(idRawData) != 1 {
-		log.Println("Could not find 'id' parameter in POST data")
+		fmt.Println("Could not find 'id' parameter in POST data")
 		return
 	}
 

@@ -17,8 +17,10 @@ func NewSQLiteDB(dbPath string) *todoDB {
 	}
 
 	// Migrate the schema
+	fmt.Println("Repositories → Migrating SQLite DB schema")
 	db.AutoMigrate(&domain.ToDo{})
 
+	fmt.Println("Repositories → Bootstraping sample data")
 	db.Create(&domain.ToDo{Summary: "Cloud Native Week announcement", Completed: true})
 	db.Create(&domain.ToDo{Summary: "Prepare demo app", Completed: false})
 	db.Create(&domain.ToDo{Summary: "Cloud Native Week Day 1", Completed: false})
@@ -34,6 +36,7 @@ func (repo *todoDB) GetAll() ([]domain.ToDo, error) {
 }
 
 func (repo *todoDB) Create(todo domain.ToDo) domain.ToDo {
+	fmt.Println("Repositories → Creating new ToDo in DB")
 	repo.db.Create(&todo)
 
 	return todo
@@ -41,6 +44,7 @@ func (repo *todoDB) Create(todo domain.ToDo) domain.ToDo {
 }
 
 func (repo *todoDB) Delete(id uint) {
+	fmt.Println("Repositories → Soft deleting existing ToDo in DB")
 	repo.db.Delete(&domain.ToDo{}, id)
 	// TODO handle failure
 }
