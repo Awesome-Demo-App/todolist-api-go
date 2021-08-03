@@ -23,7 +23,7 @@ func NewHTTPHandler(service ports.ToDoService) *HTTPHandler {
 func (handler *HTTPHandler) HandleRequests() {
 	http.HandleFunc("/todo", handler.ToDoDispatchHandler)
 
-	log.Fatal(http.ListenAndServe(":10000", nil))
+	log.Fatal(http.ListenAndServe(":8080", nil))
 }
 
 // Dispatch depending on method
