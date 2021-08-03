@@ -47,7 +47,7 @@ func (repo *todoDB) GetAll(ctx context.Context) ([]domain.ToDo, error) {
 	return todos, nil
 }
 
-func (repo *todoDB) Create(todo domain.ToDo) domain.ToDo {
+func (repo *todoDB) Create(todo domain.ToDo, ctx context.Context) domain.ToDo {
 	fmt.Println("Repositories → Creating new ToDo in DB")
 	repo.db.Create(&todo)
 
@@ -55,7 +55,7 @@ func (repo *todoDB) Create(todo domain.ToDo) domain.ToDo {
 	// TODO handle failure
 }
 
-func (repo *todoDB) Delete(id uint) {
+func (repo *todoDB) Delete(id uint, ctx context.Context) {
 	fmt.Println("Repositories → Soft deleting existing ToDo in DB")
 	repo.db.Delete(&domain.ToDo{}, id)
 	// TODO handle failure

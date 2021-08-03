@@ -23,8 +23,7 @@ func New(repository ports.ToDoRepository) *todoService {
 	}
 }
 
-func (service *todoService) GetAll() ([]domain.ToDo, error) {
-	ctx := context.Background()
+func (service *todoService) GetAll(ctx context.Context) ([]domain.ToDo, error) {
 	tracer := otel.Tracer("github.com/awesome-demo-app/todolist-api-go")
 
 	// we're ignoring errors here since we know these values are valid,
@@ -53,15 +52,15 @@ func (service *todoService) GetAll() ([]domain.ToDo, error) {
 	}(ctx)
 }
 
-func (service *todoService) Create(summary string) domain.ToDo {
+func (service *todoService) Create(summary string, ctx context.Context) domain.ToDo {
 	fmt.Printf("Domain → Creating a new ToDo with summary: %s\n", summary)
 	return service.todoRepository.Create(domain.ToDo{
 		Summary:   summary,
 		Completed: false,
-	})
+	}, ctx)
 }
 
-func (service *todoService) Delete(id uint) {
+func (service *todoService) Delete(id uint, ctx context.Context) {
 	fmt.Printf("Domain → Deleting ToDo %d\n", id)
-	service.todoRepository.Delete(id)
+	service.todoRepository.Delete(id, ctx)
 }

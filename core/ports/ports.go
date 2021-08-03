@@ -8,12 +8,12 @@ import (
 
 type ToDoRepository interface {
 	GetAll(context.Context) ([]domain.ToDo, error)
-	Create(domain.ToDo) domain.ToDo
-	Delete(uint)
+	Create(domain.ToDo, context.Context) domain.ToDo
+	Delete(uint, context.Context)
 }
 
 type ToDoService interface {
-	GetAll() ([]domain.ToDo, error)
-	Create(string) domain.ToDo
-	Delete(uint)
+	GetAll(context.Context) ([]domain.ToDo, error)
+	Create(string, context.Context) domain.ToDo
+	Delete(uint, context.Context)
 }
