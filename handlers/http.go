@@ -11,6 +11,11 @@ import (
 	"go.opentelemetry.io/otel"
 	"go.opentelemetry.io/otel/baggage"
 	"go.opentelemetry.io/otel/trace"
+
+	"github.com/prometheus/client_golang/prometheus/promhttp"
+	"github.com/slok/go-http-metrics/metrics/prometheus"
+	"github.com/slok/go-http-metrics/middleware"
+	middlewarestd "github.com/slok/go-http-metrics/middleware/std"
 )
 
 type HTTPHandler struct {
